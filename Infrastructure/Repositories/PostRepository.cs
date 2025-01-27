@@ -2,6 +2,7 @@
 using Core.Entities.Users;
 using Core.Interfaces.Repositories;
 using Infrastructure.Database.Contexts;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
@@ -13,5 +14,13 @@ public class PostRepository : BaseRepository<Post>, IPostRepository
         : base(dbContext)
     {
         _databaseContext = dbContext;
+    }
+
+    public async Task<List<Post>> GetFeed(CancellationToken cancellationToken)
+    {
+       return await _databaseContext.Posts
+       .AsNoTracking()
+       .OrderByDescending(x =>  x.CreatedAt)
+       .ToListAsync();
     }
 }

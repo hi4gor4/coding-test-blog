@@ -1,0 +1,17 @@
+﻿@model PostListModel
+
+<div class="post mt-4 mb-4 p-4 border rounded shadow-sm">
+    <div class="post-header d-flex justify-content-between">
+        <div>
+            <strong class="text-primary">@Model.Username</strong>
+            <small class="text-muted"> - @Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
+        </div>
+        <div>
+            <small class="text-secondary">Publicado em: @Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
+        </div>
+    </div>
+    <hr>
+    <div class="post-content mt-3">
+        <p>@Model.Content</p>
+    </div>
+</div>

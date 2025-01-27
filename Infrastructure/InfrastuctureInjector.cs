@@ -15,5 +15,7 @@ public static class InfrastructureInjector
     private static void RegisterRepositories(IServiceCollection services)
     {
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IPostRepository, PostRepository>();
+        services.AddScoped<ILikeRepository, LikeRepository>();
     }
 }

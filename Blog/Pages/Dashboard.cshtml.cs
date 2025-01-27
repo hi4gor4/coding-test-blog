@@ -1,3 +1,6 @@
+using AutoMapper;
+using Core.Entities.Posts;
+using Core.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -6,10 +9,22 @@ using System.Security.Claims;
 [Authorize]
 public class DashboardModel : PageModel
 {
+    [BindProperty]
+    public PostModel PostModel { get; set; }
+
     public string FullName { get; private set; }
     public string Email { get; private set; }
     public string BirthDate { get; private set; }
     public string Phone { get; private set; }
+
+    private readonly IPostService _postService;
+    private readonly IMapper _mapper;
+
+    public DashboardModel(IPostService postService, IMapper mapper)
+    {
+        _postService = postService;
+        _mapper = mapper;
+    }
 
     public void OnGet()
     {
@@ -21,23 +36,26 @@ public class DashboardModel : PageModel
         Phone = claims.FirstOrDefault(c => c.Type == "Phone")?.Value;
     }
 
-    public async Task<IActionResult> OnPostCreatePostAsync(PostModel postModel)
+    public async Task<IActionResult> OnPostCreatePostAsync(CancellationToken cancellationToken)
     {
-        if (!ModelState.IsValid)
+        var userId = User.Claims.FirstOrDefault(c => c.Type == "Id")?.Value;
+
+        if (string.IsNullOrEmpty(userId))
         {
+            ModelState.AddModelError(string.Empty, "Erro ao recuperar o ID do usuário.");
             return Page();
         }
 
-        // Obter UserId da claim
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // ou a chave da claim que você usa para o ID do usuário
+        PostModel.UserId = userId;
 
-        // Criar o post com o conteúdo e o userId
-        postModel.UserId = userId;
+        var post = _mapper.Map<Post>(PostModel);
 
-        // Salvar a publicação (chama o serviço para persistir)
-        //await _postService.CreatePostAsync(postModel);
+        var result  = await _postService.CreatePost(post, cancellationToken);
 
-        // Redirecionar ou mostrar uma mensagem de sucesso
+        if(!result.IsSuccess)
+            ModelState.AddModelError(string.Empty, "Nçao foi possivel publicar.");
+
+
         TempData["SuccessMessage"] = "Publicação criada com sucesso!";
         return RedirectToPage("/Dashboard");
     }

@@ -18,6 +18,7 @@ public static class CoreInjector
     private static void RegisterServices(IServiceCollection services)
     {
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IPostService, PostService>();
     }
 
     private static void RegisterValidators(IServiceCollection services)

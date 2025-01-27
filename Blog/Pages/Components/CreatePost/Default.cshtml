@@ -1,18 +1,13 @@
 ﻿@model PostModel
 
-<div class="card mt-4">
-    <div class="card-body">
-        <h4 class="card-title">Criar Publicação</h4>
-
-        <form method="post" asp-action="CreatePost">
-            @Html.AntiForgeryToken()
-
-            <div class="form-group mb-3">
-                <label for="content" class="form-label">Conteúdo</label>
-                <textarea id="content" name="Content" class="form-control" rows="5" required></textarea>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Publicar</button>
-        </form>
-    </div>
+<div class="form-container mt-4">
+    <h4>Crie uma publicação</h4>
+    <form method="post" asp-page-handler="CreatePost">
+        @Html.AntiForgeryToken()
+        <div class="form-group mb-3">
+            <label for="Content" class="form-label">Conteúdo</label>
+            <textarea id="Content" name="PostModel.Content" class="form-control" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Publicar</button>
+    </form>
 </div>

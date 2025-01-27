@@ -19,5 +19,7 @@
 
     @await Component.InvokeAsync("CreatePost")
 
+    @await Component.InvokeAsync("Post", new { Username = "Hiago", Content = "Este é um post de exemplo!", CreatedAtActionResult = DateTime.Now })
+
     <a href="/Logout" class="btn btn-danger mt-3">Sair</a>
 </div>
