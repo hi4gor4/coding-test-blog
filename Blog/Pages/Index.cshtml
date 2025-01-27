@@ -1,0 +1,35 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="form-container mx-auto mt-4 p-4 shadow rounded" style="max-width: 500px; background-color: #fff;">
+    <h1 class="mb-4 text-center">Bem-vindo</h1>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success text-center">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <form method="post">
+        @Html.AntiForgeryToken()
+        <div class="form-group mb-3">
+            <label for="email" class="form-label">E-mail</label>
+            <input type="email" id="email" name="Email" class="form-control" required />
+        </div>
+        <div class="form-group mb-3">
+            <label for="password" class="form-label">Senha</label>
+            <input type="password" id="password" name="Password" class="form-control" required />
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Entrar</button>
+    </form>
+
+    <div class="text-center mt-3">
+        <a href="/User/CreateUser" class="btn btn-link">Criar Conta</a>
+    </div>
+</div>
+
+<link rel="stylesheet" href="/css/styles.css">

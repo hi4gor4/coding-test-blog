@@ -1,0 +1,23 @@
+﻿@page
+@model DashboardModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container mt-4">
+    <h1>Bem-vindo ao Dashboard</h1>
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <h4 class="card-title">Informações do Usuário</h4>
+            <p><strong>Nome Completo:</strong> @Model.FullName</p>
+            <p><strong>E-mail:</strong> @Model.Email</p>
+            <p><strong>Data de Nascimento:</strong> @Model.BirthDate</p>
+            <p><strong>Telefone:</strong> @Model.Phone</p>
+        </div>
+    </div>
+
+    @await Component.InvokeAsync("CreatePost")
+
+    <a href="/Logout" class="btn btn-danger mt-3">Sair</a>
+</div>
