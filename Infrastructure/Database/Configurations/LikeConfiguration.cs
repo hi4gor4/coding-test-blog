@@ -11,13 +11,13 @@ internal class LikeConfiguration : BaseEntityConfiguration<Like>
         builder.HasKey(l => new { l.PostId, l.UserId });
 
         builder.HasOne(l => l.Post)
-            .WithMany() 
-            .HasForeignKey(l => l.PostId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .WithMany()
+            .HasForeignKey(l => l.PostId).OnDelete(DeleteBehavior.Cascade); 
+
 
         builder.HasOne(l => l.User)
-            .WithMany() 
+            .WithMany()
             .HasForeignKey(l => l.UserId)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
