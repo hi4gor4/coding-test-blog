@@ -20,6 +20,7 @@ public class PostRepository : BaseRepository<Post>, IPostRepository
     {
        return await _databaseContext.Posts
        .AsNoTracking()
+       .Include( x => x.User)
        .OrderByDescending(x =>  x.CreatedAt)
        .ToListAsync();
     }

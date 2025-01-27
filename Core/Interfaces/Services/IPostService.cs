@@ -6,5 +6,6 @@ namespace Core.Interfaces.Services
     public interface IPostService
     {
         Task<Result> CreatePost (Post post, CancellationToken cancellationToken);
+        Task<List<Post>> GetFeed(CancellationToken cancellationToken);
     }
 }

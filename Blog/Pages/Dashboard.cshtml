@@ -5,21 +5,29 @@
 }
 
 <div class="container mt-4">
-    <h1>Bem-vindo ao Dashboard</h1>
-
-    <div class="card mt-4">
-        <div class="card-body">
-            <h4 class="card-title">Informações do Usuário</h4>
-            <p><strong>Nome Completo:</strong> @Model.FullName</p>
-            <p><strong>E-mail:</strong> @Model.Email</p>
-            <p><strong>Data de Nascimento:</strong> @Model.BirthDate</p>
-            <p><strong>Telefone:</strong> @Model.Phone</p>
-        </div>
-    </div>
+    <h1>Bem-vindo ao Feed</h1>
 
     @await Component.InvokeAsync("CreatePost")
 
-    @await Component.InvokeAsync("Post", new { Username = "Hiago", Content = "Este é um post de exemplo!", CreatedAtActionResult = DateTime.Now })
-
+    @if (Model.Posts.Any())
+    {
+            <div class="mt-4">
+                <h4>Seus Posts</h4>
+                <ul class="list-group">
+                @foreach (var post in Model.Posts)
+                {
+                            <li class="list-group-item">
+                                <h5>@post.User.Name</h5>
+                                <p>@post.Content</p>
+                                <small>Criado em: @post.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
+                            </li>
+                }
+                </ul>
+            </div>
+    }
+    else
+    {
+            <p class="mt-4">Você ainda não tem posts. Crie o primeiro agora!</p>
+    }
     <a href="/Logout" class="btn btn-danger mt-3">Sair</a>
 </div>
