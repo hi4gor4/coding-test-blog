@@ -6,4 +6,6 @@ namespace Core.Interfaces.Repositories;
 public interface ILikeRepository : IBaseRepository<Like>
 {
     Task<Like?> GetByIdsAsync(long userId, long postId, CancellationToken cancellationToken);
+    Task AddLikeAsync(long userId, long postId, CancellationToken cancellationToken);
+
 }

@@ -28,36 +28,16 @@ public class LikeService : ILikeService
     }
     public async Task<Result> LikeOrDeslike(long userId, long postId, CancellationToken cancellationToken)
     {
-        var like = await _likeRepository.GetByIdsAsync(userId, postId, cancellationToken);
-
-        if (like == null)
+        try
         {
-            var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
-
-            if (user == null)
-            {
-                return Result.Error();
-            }
-
-            var post = await _postRepository.GetByIdAsync(postId, cancellationToken);
-
-            if (post == null)
-            {
-                return Result.Error();
-            }
-
-            var newlike = new Like
-            {
-                UserId = userId,
-                PostId = postId
-            };
-            await _likeRepository.AddAsync(newlike, cancellationToken);
-
+            await _likeRepository.AddLikeAsync(userId, postId, cancellationToken);
             return Result.Success();
         }
+        catch 
+        {
+            return Result.Error();
+        }
 
-        await _likeRepository.DeleteAsync(like, cancellationToken);
-        return Result.Success();
 
     }
 }
