@@ -17,9 +17,9 @@ public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
         _dbSet = _context.Set<T>();
     }
 
-    public async Task<T?> GetByIdAsync(long id)
+    public async Task<T?> GetByIdAsync(long id, CancellationToken cancellation)
     {
-        return await _dbSet.FindAsync(id);
+        return await _dbSet.FindAsync(id, cancellation);
     }
 
     public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken)

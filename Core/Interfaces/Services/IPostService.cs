@@ -7,5 +7,6 @@ namespace Core.Interfaces.Services
     {
         Task<Result> CreatePost (Post post, CancellationToken cancellationToken);
         Task<List<Post>> GetFeed(CancellationToken cancellationToken);
+        Task<Result> DeletePost(long postId, CancellationToken cancellationToken);
     }
 }

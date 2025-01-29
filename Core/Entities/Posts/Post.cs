@@ -8,6 +8,8 @@ public class Post: BaseEntity
     public long UserId { get; set; }
     public bool IsUpdated { get; set; }
 
-    public User User { get; set; } 
+    public User User { get; set; }
+    public List<Like> Likes { get; set; } = new();
+    public List<Comment> Comments { get; set; } = new();
 
 }

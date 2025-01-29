@@ -39,4 +39,16 @@ public class PostService : IPostService
     {
         return _postRepository.GetFeed(cancellationToken);
     }
+
+    public async Task<Result> DeletePost(long postId, CancellationToken cancellationToken)
+    {
+        var post = await  _postRepository.GetByIdAsync(postId, cancellationToken);
+
+        if (post == null)
+            Result.Error("Post não encontrado");
+
+        await _postRepository.DeleteAsync(post, cancellationToken);
+
+        return Result.Success();
+    }
 }

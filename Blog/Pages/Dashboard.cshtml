@@ -5,29 +5,56 @@
 }
 
 <div class="container mt-4">
-    <h1>Bem-vindo ao Feed</h1>
+    <h1 class="display-4">Bem-vindo ao Feed</h1>
 
     @await Component.InvokeAsync("CreatePost")
 
     @if (Model.Posts.Any())
     {
         <div class="mt-4">
-            <h4>Seus Posts</h4>
+            <h4 class="mb-3">Seus Posts</h4>
             <ul class="list-group">
                 @foreach (var post in Model.Posts)
                 {
-                    <li class="list-group-item mb-3">
-                        <h5>@post.User.Name</h5>
-                        <p>@post.Content</p>
-                        <small>Criado em: @post.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
+                    <li class="list-group-item mb-3 shadow-sm">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-1">@post.User.Name</h5>
+                            <small class="text-muted">@post.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
+                        </div>
+                        <p class="mb-1">@post.Content</p>
+                        <div class="d-flex justify-content-start mt-2">
+                            <!-- Botão Curtir -->
+                            <form method="post" asp-page-handler="LikePost" asp-route-postId="@post.Id" class="d-inline">
+                                <button type="submit" class="btn btn-outline-primary btn-sm me-2">
+                                    <i class="far fa-thumbs-up"></i> Curtir (@post.Likes.Count)
+                                </button>
+                            </form>
+                            <!-- Botão Comentar -->
+                            <form method="post" asp-page-handler="CommentOnPost" asp-route-postId="@post.Id" class="d-inline">
+                                <button type="submit" class="btn btn-outline-secondary btn-sm me-2">
+                                    <i class="far fa-comment"></i> Comentar
+                                </button>
+                            </form>
+                            <!-- Botão Excluir -->
+                            @if (post.UserId.ToString() == Model.CurrentUserId)
+                            {
+                                <form method="post" asp-page-handler="DeletePost" asp-route-postId="@post.Id" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este post?');">
+                                        <i class="far fa-trash-alt"></i> Excluir
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                        <div id="comments-@post.Id" class="mt-2">
+                            <!-- Aqui você pode carregar os comentários -->
+                        </div>
                     </li>
                 }
             </ul>
         </div>
-
     }
     else
     {
-            <p class="mt-4">Você ainda não tem posts. Crie o primeiro agora!</p>
+        <p class="mt-4 text-muted">Você ainda não tem posts. Crie o primeiro agora!</p>
     }
 </div>
