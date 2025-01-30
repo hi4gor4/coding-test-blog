@@ -1,5 +1,4 @@
 ﻿using Core.Entities.Posts;
-using Core.Entities.Users;
 using Core.Interfaces.Repositories;
 using Infrastructure.Database.Contexts;
 
@@ -13,5 +12,14 @@ public class CommentRepository : BaseRepository<Comment>, ICommentRepository
         : base(dbContext)
     {
         _databaseContext = dbContext;
+    }
+
+    public async Task<Comment> AddCommentAsync(Comment comment, CancellationToken cancellationToken)
+    {
+        var result = await _databaseContext.Comments.AddAsync(comment, cancellationToken);
+
+        await _databaseContext.SaveChangesAsync(cancellationToken);
+
+        return result.Entity;
     }
 }

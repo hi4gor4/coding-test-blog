@@ -22,14 +22,17 @@ public class DashboardModel : PageModel
 
     private readonly IPostService _postService;
     private readonly ILikeService _likeService;
+    private readonly ICommentService _commentService;
     private readonly IMapper _mapper;
 
     public DashboardModel(IPostService postService,
         ILikeService likeService,
+        ICommentService commentService,
         IMapper mapper)
     {
         _postService = postService;
         _likeService = likeService;
+        _commentService = commentService;
         _mapper = mapper;
     }
 
@@ -85,8 +88,7 @@ public class DashboardModel : PageModel
             return new JsonResult(new { success = false, message = "Usuário não autenticado." });
         }
 
-
-        var result = await _postService.DeletePost( postId, cancellationToken);
+        var result = await _postService.DeletePost(postId, cancellationToken);
 
         if (!result.IsSuccess)
         {
@@ -96,6 +98,7 @@ public class DashboardModel : PageModel
         TempData["SuccessMessage"] = "Post excluído com sucesso!";
         return RedirectToPage("/Dashboard");
     }
+
     public async Task<IActionResult> OnPostLikePostAsync(long postId, CancellationToken cancellationToken)
     {
         var userId = User.Claims.FirstOrDefault(c => c.Type == "Id")?.Value;
@@ -104,7 +107,7 @@ public class DashboardModel : PageModel
         {
             return new JsonResult(new { success = false, message = "Usuário não autenticado." });
         }
-       
+
         var userIdLong = long.Parse(userId);
 
         var result = await _likeService.LikeOrDeslike(userIdLong, postId, cancellationToken);
@@ -117,22 +120,24 @@ public class DashboardModel : PageModel
         return RedirectToPage("/Dashboard");
     }
 
-    //public async Task<IActionResult> OnPostCommentOnPostAsync(long postId, string comment, CancellationToken cancellationToken)
-    //{
-    //    var userId = User.Claims.FirstOrDefault(c => c.Type == "Id")?.Value;
+    public async Task<IActionResult> OnPostCommentOnPostAsync(long postId, string comment, CancellationToken cancellationToken)
+    {
+        var userId = User.Claims.FirstOrDefault(c => c.Type == "Id")?.Value;
 
-    //    if (string.IsNullOrEmpty(userId))
-    //    {
-    //        return new JsonResult(new { success = false, message = "Usuário não autenticado." });
-    //    }
+        if (string.IsNullOrEmpty(userId))
+        {
+            return new JsonResult(new { success = false, message = "Usuário não autenticado." });
+        }
 
-    //    var result = await _postService.CommentOnPost(postId, userId, comment, cancellationToken);
+        var userIdLong = long.Parse(userId);
 
-    //    if (!result.IsSuccess)
-    //    {
-    //        return new JsonResult(new { success = false, message = "Não foi possível comentar no post." });
-    //    }
+        var result = await _commentService.AddCommentAsync(postId, userIdLong, comment, cancellationToken);
 
-    //    return new JsonResult(new { success = true });
-    //}
+        if (!result.IsSuccess)
+        {
+            return new JsonResult(new { success = false, message = "não foi possível comentar no post." });
+        }
+
+        return RedirectToPage("/Dashboard");
+    }
 }
