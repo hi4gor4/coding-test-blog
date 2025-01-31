@@ -18,13 +18,14 @@ public class PostRepository : BaseRepository<Post>, IPostRepository
 
     public async Task<List<Post>> GetFeed(CancellationToken cancellationToken)
     {
-       return await _databaseContext.Posts
-       .AsNoTracking()
-       .Include( x => x.User)
-       .Include( x => x.Comments)
-       .Include( x => x.Likes)
-       .OrderByDescending(x =>  x.CreatedAt)
-       .Where(x => !x.Deleted)
-       .ToListAsync();
+        return await _databaseContext.Posts
+            .AsNoTracking()
+            .Include(x => x.User)
+            .Include(x => x.Comments)
+                .ThenInclude(c => c.User)
+            .Include(x => x.Likes)
+            .OrderByDescending(x => x.CreatedAt)
+            .Where(x => !x.Deleted)
+            .ToListAsync(cancellationToken);
     }
 }

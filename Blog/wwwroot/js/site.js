@@ -1,4 +1,21 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿$(document).ready(function () {
+    $('.cpf-mask').mask('000.000.000-00');
+    $('.phone-mask').mask('(00) 00000-0000');
 
-// Write your JavaScript code.
+    flatpickr('.datepicker', {
+        dateFormat: "d/m/Y",
+        maxDate: "today",
+        locale: "pt"
+    });
+
+    $('#confirmPassword').on('keyup', function () {
+        const password = $('#password').val();
+        const confirmPassword = $(this).val();
+
+        if (password !== confirmPassword) {
+            this.setCustomValidity("As senhas não coincidem!");
+        } else {
+            this.setCustomValidity("");
+        }
+    });
+});

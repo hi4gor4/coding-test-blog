@@ -23,17 +23,14 @@
                         </div>
                         <p class="mb-1">@post.Content</p>
                         <div class="d-flex justify-content-start mt-2">
-                            <!-- Botão Curtir -->
                             <form method="post" asp-page-handler="LikePost" asp-route-postId="@post.Id" class="d-inline">
                                 <button type="submit" class="btn btn-outline-primary btn-sm me-2">
                                     <i class="far fa-thumbs-up"></i> Curtir (@post.Likes.Count)
                                 </button>
                             </form>
-                            <!-- Botão Comentar -->
                             <button type="button" class="btn btn-outline-secondary btn-sm me-2" data-bs-toggle="collapse" data-bs-target="#commentForm-@post.Id">
                                 <i class="far fa-comment"></i> Comentar (@post.Comments.Count)
                             </button>
-                            <!-- Botão Excluir -->
                             @if (post.UserId.ToString() == Model.CurrentUserId)
                             {
                                 <form method="post" asp-page-handler="DeletePost" asp-route-postId="@post.Id" class="d-inline">
@@ -43,7 +40,6 @@
                                 </form>
                             }
                         </div>
-                        <!-- Formulário de Comentário -->
                         <div id="commentForm-@post.Id" class="collapse mt-3">
                             <form method="post" asp-page-handler="CommentOnPost" asp-route-postId="@post.Id">
                                 <div class="input-group">
@@ -52,17 +48,21 @@
                                 </div>
                             </form>
                         </div>
-                        <!-- Lista de Comentários -->
                         <div id="comments-@post.Id" class="mt-2">
-                            @foreach (var comment in post.Comments)
+                            @if (post.Comments != null && post.Comments.Any())
                             {
-                                <div class="card mb-2">
-                                    <div class="card-body">
-                                        <h6 class="card-title">@comment.User.Name</h6>
-                                        <p class="card-text">@comment.Content</p>
-                                        <small class="text-muted">@comment.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
+                                foreach (var comment in post.Comments)
+                                {
+                                    <div class="card mb-2">
+                                        <div class="card-body">
+                                            <h6 class="card-title">
+                                                @(comment.User?.Name ?? "Usuário desconhecido") <!-- Trate nulls -->
+                                            </h6>
+                                            <p class="card-text">@comment.Content</p>
+                                            <small class="text-muted">@comment.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
+                                        </div>
                                     </div>
-                                </div>
+                                }
                             }
                         </div>
                     </li>

@@ -13,14 +13,17 @@ public class PostService : IPostService
 {
     private readonly IUserRepository _userRepository;
     private readonly IPostRepository _postRepository;
+    private readonly ICommentRepository _commentRepository;
     private readonly IValidator<User> _createUserValidator;
 
     public PostService(IUserRepository userRepository,
         IPostRepository postRepository,
+        ICommentRepository commentRepository,
         IServiceProvider serviceProvider)
     {
         _userRepository = userRepository;
         _postRepository = postRepository;
+        _commentRepository = commentRepository;
         _createUserValidator = serviceProvider.GetService<CreateUserValidator>();
 
     }
@@ -35,9 +38,16 @@ public class PostService : IPostService
         return Result.Success();
     }
 
-    public Task<List<Post>> GetFeed(CancellationToken cancellationToken)
+    public async Task<List<Post>> GetFeed(CancellationToken cancellationToken)
     {
-        return _postRepository.GetFeed(cancellationToken);
+        var posts = await  _postRepository.GetFeed(cancellationToken);
+
+        foreach (var item in posts)
+        {
+            item.Comments = await _commentRepository.GetCommentsByPostIdAsync(item.Id, cancellationToken);
+        }
+
+        return posts;
     }
 
     public async Task<Result> DeletePost(long postId, CancellationToken cancellationToken)

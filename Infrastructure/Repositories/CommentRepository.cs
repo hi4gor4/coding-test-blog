@@ -1,6 +1,7 @@
 ﻿using Core.Entities.Posts;
 using Core.Interfaces.Repositories;
 using Infrastructure.Database.Contexts;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
@@ -21,5 +22,15 @@ public class CommentRepository : BaseRepository<Comment>, ICommentRepository
         await _databaseContext.SaveChangesAsync(cancellationToken);
 
         return result.Entity;
+    }
+
+    public async Task<List<Comment>> GetCommentsByPostIdAsync(long postId, CancellationToken cancellationToken)
+    {
+        return await _databaseContext.Comments
+            .AsNoTracking()
+            .Include(c => c.User) 
+            .Where(c => c.PostId == postId)
+            .OrderByDescending(c => c.CreatedAt)
+            .ToListAsync(cancellationToken);
     }
 }

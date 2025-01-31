@@ -1,0 +1,34 @@
+﻿@foreach (var post in Model.Posts)
+{
+    <li class="list-group-item mb-3 shadow-sm">
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-1">@post.UserName</h5>
+            <small class="text-muted">@post.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
+        </div>
+        <p class="mb-1">@post.Content</p>
+        <div class="d-flex justify-content-start mt-2">
+            <form method="post" asp-page-handler="LikePost" asp-route-postId="@post.Id" class="d-inline">
+                <button type="submit" class="btn btn-outline-primary btn-sm me-2">
+                    <i class="far fa-thumbs-up"></i> Curtir (@post.LikesCount)
+                </button>
+            </form>
+            <button type="button" class="btn btn-outline-secondary btn-sm me-2" data-bs-toggle="collapse" data-bs-target="#commentForm-@post.Id">
+                <i class="far fa-comment"></i> Comentar (@post.Comments.Count)
+            </button>
+        </div>
+        <div id="commentForm-@post.Id" class="collapse mt-3">
+        </div>
+        <div id="comments-@post.Id" class="mt-2">
+            @foreach (var comment in post.Comments)
+            {
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <h6 class="card-title">@comment.UserName</h6>
+                        <p class="card-text">@comment.Content</p>
+                        <small class="text-muted">@comment.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
+                    </div>
+                </div>
+            }
+        </div>
+    </li>
+}
